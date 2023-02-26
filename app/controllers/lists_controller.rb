@@ -1,4 +1,7 @@
 class ListsController < ApplicationController
+  before_action :find_list, only: [:destroy ]
+  # before_action :find_list, :only[:show, :movies, :destroy]
+  # before_action :bookmarks, :only[:show]
   def index
     @lists = List.all
     @list = List.new
@@ -18,14 +21,17 @@ class ListsController < ApplicationController
   end
 
   def destroy
-    @list = List.find(params[:id])
     @list.destroy
     redirect_to list_path(@list), status: :see_other
   end
 
   private
 
-  def set_list
-    @list = List.find(params[:list_id])
+  def list_params
+    params.require(:list).permit(:name)
+  end
+
+  def find_list
+    @list = List.find(params[:id])
   end
 end
